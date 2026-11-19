@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CYBERVAULT // AES-256 VAULT</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #06070d;
+            background-image: 
+                radial-gradient(circle at 50% 45%, rgba(255, 42, 133, 0.20), transparent 45%),
+                radial-gradient(circle at 80% 20%, rgba(255, 230, 0, 0.14), transparent 40%),
+                radial-gradient(circle at 15% 80%, rgba(255, 42, 133, 0.15), transparent 40%);
+            color: #f8fafc;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            padding: 20px 24px;
+        }
+        .wrapper { width: 100%; max-width: 1180px; margin: 0 auto; }
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px; padding: 14px 22px;
+            background: rgba(15, 17, 28, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px; margin-bottom: 20px;
+        }
+        .brand {
+            font-weight: 800; letter-spacing: 3px; font-size: 16px;
+            background: linear-gradient(90deg, #ff2a85, #ffe600);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-links a {
+            text-decoration: none; color: #cbd5e1; font-size: 12px;
+            font-weight: 700; letter-spacing: 1px; padding: 8px 16px;
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background: linear-gradient(90deg, #ff2a85, #ffe600);
+            color: #06070d; border-color: transparent;
+        }
+        .bento-grid {
+            display: grid; grid-template-columns: 1fr 1.4fr 1fr;
+            gap: 18px; align-items: start;
+        }
+        @media (max-width: 900px) { .bento-grid { grid-template-columns: 1fr; } }
+        .col-stack { display: flex; flex-direction: column; gap: 18px; }
+        .bento-card {
+            background: rgba(14, 16, 26, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px; padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .card-label {
+            font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: #94a3b8;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px;
+        }
+        .pill-pink { background: rgba(255, 42, 133, 0.18); color: #ff5ca1; padding: 3px 9px; border-radius: 20px; font-size: 10px; border: 1px solid rgba(255, 42, 133, 0.4); }
+        .pill-lemon { background: rgba(255, 230, 0, 0.15); color: #ffe600; padding: 3px 9px; border-radius: 20px; font-size: 10px; border: 1px solid rgba(255, 230, 0, 0.4); }
+        input, textarea {
+            width: 100%; background: #07080f;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px; color: #ffffff;
+            padding: 12px 14px; font-size: 13px; font-family: inherit; outline: none;
+        }
+        input:focus, textarea:focus { border-color: #ff2a85; box-shadow: 0 0 12px rgba(255, 42, 133, 0.3); }
+        .center-core {
+            border: 1px solid rgba(255, 42, 133, 0.45);
+            background: radial-gradient(circle at 50% 20%, rgba(255, 42, 133, 0.18), rgba(12, 14, 24, 0.96) 70%);
+        }
+        .neon-orb {
+            width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 10px auto;
+            border: 3px solid #ff2a85;
+            box-shadow: 0 0 22px rgba(255, 42, 133, 0.7), inset 0 0 15px rgba(255, 230, 0, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 12px; color: #ffe600;
+        }
+        .btn-radiant {
+            width: 100%; padding: 13px; margin-top: 12px; border: none; border-radius: 10px;
+            font-weight: 800; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+            cursor: pointer; color: #06070d;
+            background: linear-gradient(90deg, #ff2a85, #ffe600);
+        }
+        .btn-lemon-outline {
+            width: 100%; padding: 12px; margin-top: 12px;
+            border: 1px solid #ffe600; border-radius: 10px;
+            font-weight: 700; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
+            cursor: pointer; color: #ffe600; background: rgba(255, 230, 0, 0.1);
+        }
+        .btn-lemon-outline:hover { background: #ffe600; color: #06070d; }
+        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tool-tile { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px; text-align: center; font-size: 11px; color: #cbd5e1; }
+        .tool-tile strong { display: block; color: #ff5ca1; font-size: 14px; margin-bottom: 3px; }
+        .console-readout {
+            margin-top: 12px; padding: 12px; border-radius: 10px; background: #06070d;
+            border: 1px solid rgba(255, 42, 133, 0.4); font-size: 12px; color: #e2e8f0;
+            word-break: break-all; min-height: 44px;
+        }
+        .log-feed { list-style: none; font-size: 11px; color: #94a3b8; display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+        .log-feed li { padding: 8px 10px; background: rgba(255, 255, 255, 0.04); border-radius: 8px; border-left: 2px solid #ffe600; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="nav-bar">
+            <div class="brand">CYBERVAULT // OS</div>
+            <div class="nav-links">
+                <a href="index.html" class="active">01. AES VAULT</a>
+                <a href="cipher-game.html">02. CIPHER BREAKER GAME</a>
+                <a href="stego-draw.html">03. NEON SKETCHPAD</a>
+            </div>
+        </nav>
+
+        <div class="bento-grid">
+            <div class="col-stack">
+                <div class="bento-card">
+                    <div class="card-label"><span>Gateway Auth</span><span class="pill-pink">X-API-KEY</span></div>
+                    <input type="text" id="apiKeyInput" value="cyber-secret-key-2026" placeholder="Enter API Key...">
+                    <p style="font-size: 11px; color: #64748b; margin-top: 8px;">Required key: <strong style="color:#ffe600;">cyber-secret-key-2026</strong></p>
+                </div>
+                <div class="bento-card">
+                    <div class="card-label"><span>Security Specs</span><span class="pill-lemon">ACTIVE</span></div>
+                    <div class="tool-grid">
+                        <div class="tool-tile"><strong>256-BIT</strong>Key Entropy</div>
+                        <div class="tool-tile"><strong>16-BYTE</strong>Random IV</div>
+                        <div class="tool-tile"><strong>1-TIME</strong>Self-Destruct</div>
+                        <div class="tool-tile"><strong>0-LOG</strong>Zero Trace</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card center-core">
+                <div style="text-align: center; margin-bottom: 18px;">
+                    <div class="neon-orb">VAULT</div>
+                    <div style="font-size: 12px; color: #cbd5e1;">Encrypt &amp; Seal Classified Payloads</div>
+                </div>
+                <div class="card-label"><span>Payload Input</span><span class="pill-pink">POST /lock</span></div>
+                <textarea id="secretInput" rows="4" placeholder="Type secret intel to encrypt..."></textarea>
+                <button type="button" class="btn-radiant" onclick="lockMessage()">Encrypt &amp; Generate Vault ID</button>
+                <div id="lockOutput" class="console-readout">Status: Core idle. Awaiting payload...</div>
+            </div>
+
+            <div class="col-stack">
+                <div class="bento-card">
+                    <div class="card-label"><span>One-Time Decryption</span><span class="pill-lemon">GET /unlock/:id</span></div>
+                    <input type="text" id="idInput" placeholder="Paste 8-char Secret ID...">
+                    <button type="button" class="btn-lemon-outline" onclick="unlockMessage()">Decrypt &amp; Self-Destruct</button>
+                    <div id="unlockOutput" class="console-readout">Status: Vault sealed...</div>
+                </div>
+                <div class="bento-card">
+                    <div class="card-label"><span>Live Audit Trail</span><span class="pill-pink">TELEMETRY</span></div>
+                    <ul class="log-feed" id="auditLog">
+                        <li>System initialized with AES-256-CBC engine.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
